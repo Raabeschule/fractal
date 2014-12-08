@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qdebug.h"
+#include "qfiledialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -18,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     size = 1024;
     upperLimit = 1e120;
-    maxIterations = 100;
+    maxIterations = 1000;
 
     image = getFractalImage(c, 0.004, size);
     ui->label->setPixmap(QPixmap::fromImage(image));
@@ -85,7 +86,10 @@ double MainWindow::map(double value, double in_min, double in_max, double out_mi
 }
 
 void MainWindow::saveImage() {
-    if(!image.save("/home/seven/Downloads/fractal.jpg", "jpg", 100)) {
+    qDebug() << QDir::homePath();
+    // see https://stackoverflow.com/questions/14033720/qfiledialog-how-to-specify-home-directory#comment19386951_14033968
+    QString filename = QFileDialog::getSaveFileName(this, "Save image", QDir::homePath() + QDir::separator() + "fractal.jpg", "JPEG Files (*.jpg, *.jpeg)");
+    if(!image.save(filename, "jpg", 100)) {
         qDebug() << "Error saving image.";
     }
 }
