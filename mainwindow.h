@@ -21,8 +21,17 @@ private:
     double isConvergent(double rl, double im, std::complex<double> c = 0);
     std::complex<double> julia(std::complex<double> a, std::complex<double> c = 0);
     double complexDistance(std::complex<double> prev, std::complex<double> curr);
+    double map(double value, double in_min, double in_max, double out_min, double out_max);
 
     double upperLimit;
+    double maxIterations;
+    double maxActualIterations;
+    double size;
+
+    QImage image;
+
+private slots:
+    void saveImage();
 };
 
 #endif // MAINWINDOW_H
