@@ -1,10 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <qDebug>
+#include "qdebug.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    ui->realEdit->setValidator( new QDoubleValidator());
+    ui->imagEdit->setValidator( new QDoubleValidator());
+    ui->zoomEdit->setValidator( new QDoubleValidator(0, 1, 9, this));
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(saveImage()));
+    connect(ui->drawButton, SIGNAL(clicked()), this, SLOT(drawFractal()));
 
     // Some fractals to try
     //std::complex<double> c(0, 1);
@@ -14,16 +18,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     size = 1024;
     upperLimit = 1e120;
-    maxIterations = 1000;
-    maxActualIterations = 0;
+    maxIterations = 100;
 
-    image = QImage(size, size, QImage::Format_RGB32);
+    image = getFractalImage(c, 0.004, size);
+    ui->label->setPixmap(QPixmap::fromImage(image));
+}
+
+QImage MainWindow::getFractalImage(std::complex<double> c, double zoom, double size) {
+    double maxActualIterations = 0;
+    QImage image = QImage(size, size, QImage::Format_RGB32);
     image.fill(Qt::white);
 
     for(int xPos = 0; xPos < size; xPos++) {
         for(int yPos = 0; yPos < size; yPos++) {
-            double rl = (xPos - (size/2)) * 0.004;
-            double im = -((yPos - (size/2)) * 0.004);
+            double rl = (xPos - (size/2)) * zoom;
+            double im = -((yPos - (size/2)) * zoom);
             double dist = isConvergent(rl, im, c);
 
             if(dist > maxActualIterations) maxActualIterations = dist;
@@ -32,8 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     for(int xPos = 0; xPos < size; xPos++) {
         for(int yPos = 0; yPos < size; yPos++) {
-            double rl = (xPos - (size/2)) * 0.004;
-            double im = -((yPos - (size/2)) * 0.004);
+            double rl = (xPos - (size/2)) * zoom;
+            double im = -((yPos - (size/2)) * zoom);
             double dist = isConvergent(rl, im, c);
 
             if(dist == -1) {
@@ -45,8 +54,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             }
         }
     }
-
-    ui->label->setPixmap(QPixmap::fromImage(image));
+    return image;
 }
 
 double MainWindow::isConvergent(double rl, double im, std::complex<double> c) {
@@ -77,9 +85,18 @@ double MainWindow::map(double value, double in_min, double in_max, double out_mi
 }
 
 void MainWindow::saveImage() {
-    if(!image.save("/Users/benni/Downloads/fractal.jpg", "jpg", 100)) {
+    if(!image.save("/home/seven/Downloads/fractal.jpg", "jpg", 100)) {
         qDebug() << "Error saving image.";
     }
+}
+
+void MainWindow::drawFractal() {
+    double imag = ui->imagEdit->text().toDouble();
+    double real = ui->realEdit->text().toDouble();
+    double zoom = ui->zoomEdit->text().toDouble();
+    std::complex<double> c(real, imag);
+    image = getFractalImage(c, zoom, size);
+    ui->label->setPixmap(QPixmap::fromImage(image));
 }
 
 MainWindow::~MainWindow() {
