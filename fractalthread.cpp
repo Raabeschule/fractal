@@ -20,6 +20,7 @@ void FractalThread::setParameters(std::complex<double> c_param, double zoom_para
 }
 
 QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, double size) {
+    double progress = 0;
     double maxActualIterations = 0;
     QImage image = QImage(size, size, QImage::Format_RGB32);
     image.fill(Qt::white);
@@ -31,7 +32,9 @@ QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, doubl
             double dist = isConvergent(rl, im, c);
 
             if(dist > maxActualIterations) maxActualIterations = dist;
+            progress++;
         }
+        emit progressChanged(progress);
     }
 
     for(int xPos = 0; xPos < size; xPos++) {
@@ -47,7 +50,9 @@ QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, doubl
                 int color = map(dist, 0, maxActualIterations, 0, 255);
                 image.setPixel(xPos, yPos, qRgb(0,color,color/5));
             }
+            progress++;
         }
+        emit progressChanged(progress);
     }
     return image;
 }

@@ -30,6 +30,7 @@ private:
 
 signals:
     void imageDone(QImage);
+    void progressChanged(double);
 
 public slots:
 

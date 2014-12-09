@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QProgressBar>
 #include <complex>
 #include "fractalthread.h"
 
@@ -19,23 +20,23 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    double isConvergent(double rl, double im, std::complex<double> c = 0);
-    std::complex<double> julia(std::complex<double> a, std::complex<double> c = 0);
-    double complexDistance(std::complex<double> prev, std::complex<double> curr);
-    double map(double value, double in_min, double in_max, double out_min, double out_max);
-    QImage getFractalImage(std::complex<double> c, double zoom, double size);
+    QProgressBar *progressBar;
 
     double maxActualIterations;
     double size;
 
     FractalThread *mThread;
 
-    QImage image;
+    QImage image_global;
 
 private slots:
     void saveImage();
     void drawFractal();
-    void onImageDone(QImage);
+    void onImageDone(QImage image_global);
+    void onProgressChanged(double progress);
+    void on_realSlider_valueChanged(int value);
+    void on_imagSlider_valueChanged(int value);
+    void on_zoomSlider_valueChanged(int value);
 };
 
 #endif // MAINWINDOW_H
