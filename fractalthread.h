@@ -1,41 +1,38 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef FRACTALTHREAD_H
+#define FRACTALTHREAD_H
 
-#include <QMainWindow>
+#include <QThread>
+#include <QImage>
 #include <complex>
-#include "fractalthread.h"
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class FractalThread : public QThread
 {
     Q_OBJECT
-
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit FractalThread(QObject *parent = 0);
+    void run();
+    void setParameters(std::complex<double> c_param, double zoom_param, double size_param);
+
+    bool Stop;
 
 private:
-    Ui::MainWindow *ui;
     double isConvergent(double rl, double im, std::complex<double> c = 0);
     std::complex<double> julia(std::complex<double> a, std::complex<double> c = 0);
     double complexDistance(std::complex<double> prev, std::complex<double> curr);
     double map(double value, double in_min, double in_max, double out_min, double out_max);
     QImage getFractalImage(std::complex<double> c, double zoom, double size);
 
-    double maxActualIterations;
+    double upperLimit;
+    double maxIterations;
+    std::complex<double> c;
+    double zoom;
     double size;
 
-    FractalThread *mThread;
+signals:
+    void imageDone(QImage);
 
-    QImage image;
+public slots:
 
-private slots:
-    void saveImage();
-    void drawFractal();
-    void onImageDone(QImage);
 };
 
-#endif // MAINWINDOW_H
+#endif // FRACTALTHREAD_H

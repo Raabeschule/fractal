@@ -13,8 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    fractalthread.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    fractalthread.h
 
 FORMS    += mainwindow.ui
