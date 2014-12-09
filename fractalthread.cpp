@@ -1,4 +1,5 @@
 #include "fractalthread.h"
+#include "qdebug.h"
 
 FractalThread::FractalThread(QObject *parent) :
     QThread(parent) {
@@ -24,6 +25,7 @@ QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, doubl
     double maxActualIterations = 0;
     QImage image = QImage(size, size, QImage::Format_RGB32);
     image.fill(Qt::white);
+    std::vector<double> distArray(size*size);
 
     for(int xPos = 0; xPos < size; xPos++) {
         for(int yPos = 0; yPos < size; yPos++) {
@@ -32,16 +34,16 @@ QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, doubl
             double dist = isConvergent(rl, im, c);
 
             if(dist > maxActualIterations) maxActualIterations = dist;
+            distArray[progress] = dist;
             progress++;
         }
         emit progressChanged(progress);
     }
+    qDebug()<< progress-size*size;
 
     for(int xPos = 0; xPos < size; xPos++) {
         for(int yPos = 0; yPos < size; yPos++) {
-            double rl = (xPos - (size/2)) * zoom;
-            double im = -((yPos - (size/2)) * zoom);
-            double dist = isConvergent(rl, im, c);
+            double dist = distArray[progress-size*size];
 
             if(dist == -1) {
                 image.setPixel(xPos, yPos, qRgb(0,0,0));
