@@ -20,3 +20,9 @@ HEADERS  += mainwindow.h \
     fractalthread.h
 
 FORMS    += mainwindow.ui
+
+OTHER_FILES +=
+
+RC_FILE = fractal.rc
+RESOURCES += \
+    fractal.qrc

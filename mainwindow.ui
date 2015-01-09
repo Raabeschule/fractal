@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>FractalExplorer</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="fractal.qrc">
+    <normaloff>:/fractal/icon.ico</normaloff>:/fractal/icon.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="0">
@@ -157,12 +161,14 @@
      <x>0</x>
      <y>0</y>
      <width>625</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="fractal.qrc"/>
+ </resources>
  <connections/>
 </ui>
