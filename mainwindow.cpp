@@ -25,12 +25,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     std::complex<double> c(0, 0.73051);
     size = 1024;
 
+    QStringList colors;
+    colors << "Green" << "Red" << "Blue";
+
+    ui->comboBox->addItems(colors);
+
     progressBar = new QProgressBar(this);
     progressBar->setRange(0, (size*size)*2);
     ui->statusBar->addPermanentWidget(progressBar);
     progressBar->setVisible(true);
 
-    mThread->setParameters(c, 0.004, size);
+    mThread->setParameters(c, 0.004, size, 0);
     mThread->start();
 }
 
@@ -50,8 +55,9 @@ void MainWindow::drawFractal() {
     double imag = ui->imagEdit->text().toDouble();
     double real = ui->realEdit->text().toDouble();
     double zoom = ui->zoomEdit->text().toDouble();
+    int base_color = ui->comboBox->currentIndex();
     std::complex<double> c(real, imag);
-    mThread->setParameters(c, zoom, size);
+    mThread->setParameters(c, zoom, size, base_color);
     mThread->start();
 }
 

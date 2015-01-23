@@ -10,17 +10,18 @@ FractalThread::FractalThread(QObject *parent) :
 
 void FractalThread::run() {
     QImage image = QImage(size, size, QImage::Format_RGB32);
-    image = getFractalImage(c, zoom, size);
+    image = getFractalImage(c, zoom, size, base_color);
     emit imageDone(image);
 }
 
-void FractalThread::setParameters(std::complex<double> c_param, double zoom_param, double size_param) {
+void FractalThread::setParameters(std::complex<double> c_param, double zoom_param, double size_param, int base_color_param) {
     c = c_param;
     zoom = zoom_param;
     size = size_param;
+    base_color = base_color_param;
 }
 
-QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, double size) {
+QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, double size, int base_color) {
     double progress = 0;
     double maxActualIterations = 0;
     QImage image = QImage(size, size, QImage::Format_RGB32);
@@ -50,7 +51,23 @@ QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, doubl
             }
             else {
                 int color = map(dist, 0, maxActualIterations, 0, 255);
-                image.setPixel(xPos, yPos, qRgb(0,color,color/5));
+
+                QRgb pixel_color;
+                switch(base_color){
+                    case 0:
+                        pixel_color = qRgb(0, color, color/5); // Green
+                        break;
+                    case 1:
+                        pixel_color = qRgb(color, color/5, 0); // Red
+                        break;
+                    case 2:
+                        pixel_color = qRgb(color/5, 0, color); // Blue
+                        break;
+                    default:
+                        pixel_color = qRgb(0, color, color/5); // Green
+                }
+
+                image.setPixel(xPos, yPos, pixel_color);
             }
             progress++;
         }
