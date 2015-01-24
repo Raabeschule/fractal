@@ -5,9 +5,9 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    ui->realEdit->setValidator( new QDoubleValidator());
-    ui->imagEdit->setValidator( new QDoubleValidator());
-    ui->zoomEdit->setValidator( new QDoubleValidator(0, 1, 9, this));
+    ui->realEdit->setValidator(new QDoubleValidator());
+    ui->imagEdit->setValidator(new QDoubleValidator());
+    ui->zoomEdit->setValidator(new QDoubleValidator(0, 1, 9, this));
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(saveImage()));
     connect(ui->drawButton, SIGNAL(clicked()), this, SLOT(drawFractal()));
     connect(ui->imagSlider, SIGNAL(valueChanged(int)), this, SLOT(on_imagSlider_valueChanged(int)));
@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //std::complex<double> c(0.2323, 0.2334);
     //std::complex<double> c(0.2323, 0.73051);
     std::complex<double> c(0, 0.73051);
+    double zoom = 0.004;
     size = 1024;
 
     QStringList colors;
@@ -35,7 +36,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->statusBar->addPermanentWidget(progressBar);
     progressBar->setVisible(true);
 
-    mThread->setParameters(c, 0.004, size, 0);
+    ui->realEdit->setText(QString::number(c.real()));
+    ui->imagEdit->setText(QString::number(c.imag()));
+    ui->zoomEdit->setText(QString::number(zoom));
+    ui->realSlider->setValue(c.real() * 0.01);
+    ui->imagSlider->setValue(c.imag() * 0.01);
+    ui->zoomSlider->setValue(zoom * 0.00004);
+
+    mThread->setParameters(c, zoom, size, 0);
     mThread->start();
 }
 
@@ -75,17 +83,14 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::on_realSlider_valueChanged(int value)
-{
-    ui->realEdit->setText(QString::number(value*0.01));
+void MainWindow::on_realSlider_valueChanged(int value) {
+    ui->realEdit->setText(QString::number(value * 0.01));
 }
 
-void MainWindow::on_imagSlider_valueChanged(int value)
-{
-    ui->imagEdit->setText(QString::number(value*0.01));
+void MainWindow::on_imagSlider_valueChanged(int value) {
+    ui->imagEdit->setText(QString::number(value * 0.01));
 }
 
-void MainWindow::on_zoomSlider_valueChanged(int value)
-{
-    ui->zoomEdit->setText(QString::number(value*0.00004));
+void MainWindow::on_zoomSlider_valueChanged(int value) {
+    ui->zoomEdit->setText(QString::number(value * 0.00004));
 }
