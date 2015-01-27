@@ -10,8 +10,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -28,6 +27,8 @@ private:
     FractalThread *mThread;
 
     QImage image_global;
+
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private slots:
     void saveImage();

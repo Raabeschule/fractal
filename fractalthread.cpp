@@ -4,9 +4,7 @@
 FractalThread::FractalThread(QObject *parent) :
     QThread(parent) {
     upperLimit = 1e120;
-    maxIterations = 100;
 }
-
 
 void FractalThread::run() {
     QImage image = QImage(size, size, QImage::Format_RGB32);
@@ -14,10 +12,11 @@ void FractalThread::run() {
     emit imageDone(image);
 }
 
-void FractalThread::setParameters(std::complex<double> c_param, double zoom_param, double size_param, int base_color_param) {
+void FractalThread::setParameters(std::complex<double> c_param, double zoom_param, double size_param, int iterations_param, int base_color_param) {
     c = c_param;
     zoom = zoom_param;
     size = size_param;
+    maxIterations = iterations_param;
     base_color = base_color_param;
 }
 

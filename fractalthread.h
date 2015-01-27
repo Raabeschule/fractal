@@ -11,7 +11,7 @@ class FractalThread : public QThread
 public:
     explicit FractalThread(QObject *parent = 0);
     void run();
-    void setParameters(std::complex<double> c_param, double zoom_param, double size_param, int base_color_param);
+    void setParameters(std::complex<double> c_param, double zoom_param, double size_param, int iterations_param, int base_color_param);
 
     bool Stop;
 
