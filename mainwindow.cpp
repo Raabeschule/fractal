@@ -32,16 +32,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->comboBox->addItems(colors);
 
     progressBar = new QProgressBar(this);
-    progressBar->setRange(0, (size*size)*2);
+    progressBar->setRange(0, (size * size) * 2);
     ui->statusBar->addPermanentWidget(progressBar);
     progressBar->setVisible(true);
 
     ui->realEdit->setText(QString::number(c.real()));
     ui->imagEdit->setText(QString::number(c.imag()));
     ui->zoomEdit->setText(QString::number(zoom));
-    ui->realSlider->setValue(c.real() * 0.01);
-    ui->imagSlider->setValue(c.imag() * 0.01);
-    ui->zoomSlider->setValue(zoom * 0.00004);
+    ui->realSlider->setValue(c.real() * 100);
+    ui->imagSlider->setValue(c.imag() * 100);
+    ui->zoomSlider->setValue(zoom * 25000);
 
     mThread->setParameters(c, zoom, size, 0);
     mThread->start();
@@ -50,10 +50,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 
 void MainWindow::saveImage() {
-    qDebug() << QDir::homePath();
     // see https://stackoverflow.com/questions/14033720/qfiledialog-how-to-specify-home-directory#comment19386951_14033968
     QString filename = QFileDialog::getSaveFileName(this, "Save image", QDir::homePath() + QDir::separator() + "fractal.jpg", "JPEG Files (*.jpg, *.jpeg)");
-    qDebug() << filename;
     if(!image_global.save(filename, "jpg", 100)) {
         qDebug() << "Error saving image.";
     }
@@ -93,4 +91,5 @@ void MainWindow::on_imagSlider_valueChanged(int value) {
 
 void MainWindow::on_zoomSlider_valueChanged(int value) {
     ui->zoomEdit->setText(QString::number(value * 0.00004));
+    qDebug() << value << ui->zoomEdit->text();
 }
