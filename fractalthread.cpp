@@ -39,7 +39,6 @@ QImage FractalThread::getFractalImage(std::complex<double> c, double zoom, doubl
         }
         emit progressChanged(progress);
     }
-    qDebug()<< progress-size*size;
 
     for(int xPos = 0; xPos < size; xPos++) {
         for(int yPos = 0; yPos < size; yPos++) {

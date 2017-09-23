@@ -70,6 +70,7 @@ void MainWindow::drawFractal() {
     double zoom = ui->zoomEdit->text().toDouble();
     double user_size = ui->sizeEdit->text().toInt();
     double iterations = ui->iterationsEdit->text().toInt();
+    progressBar->setRange(0, (user_size * user_size) * 2);
 
     int base_color = ui->comboBox->currentIndex();
     std::complex<double> c(real, imag);
