@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->zoomEdit->setValidator(new QDoubleValidator(0, 1, 9, this));
     ui->sizeEdit->setValidator(new QIntValidator());
     ui->iterationsEdit->setValidator(new QIntValidator());
+    ui->scrollArea->setWidget(ui->label);
 
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(saveImage()));
     connect(ui->drawButton, SIGNAL(clicked()), this, SLOT(drawFractal()));
